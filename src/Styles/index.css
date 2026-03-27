@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-fadeIn {
+  animation: fadeIn 0.4s ease;
+}
+
+@theme {
+  --default-font-family: "Arial";
+  --color-bg-start: #33684e;
+  --color-bg-end: #257947;
+  --color-primary: #32694e;
+  --color-almostWhite: #f8f9fa;
+  --color-blue: #6ec1e4;
+  --color-primaryGreen: #759933;
+  --text-almostN: 28px;
+  --text-largerN: 32px;
+  --text-almostL: 42px;
+}
+
+.wrapper {
+  max-width: calc(100% - 290px);
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1920px) {
+  .wrapper {
+    max-width: 1630px;
+  }
+}
+
+@media screen and (max-width: 1279px) {
+  .wrapper {
+    max-width: calc(100% - 200px);
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .wrapper {
+    max-width: calc(100% - 150px);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .wrapper {
+    max-width: calc(100% - 100px);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .wrapper {
+    max-width: calc(100% - 50px);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .wrapper {
+    max-width: 100%;
+    padding-inline: 20px;
+  }
+}
