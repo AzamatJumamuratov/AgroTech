@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import FetchData from "../FetchData.js";
+import FetchData, { getAuthHeader } from "../FetchData.js";
 
 export async function loader() {
   const token = localStorage.getItem("token");

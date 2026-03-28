@@ -4,7 +4,7 @@ import { redirect, useRevalidator } from "react-router";
 import { createPortal } from "react-dom";
 import UpdateValuesModal from "../Admin/UpdateValuesModal";
 import { useState } from "react";
-import FetchData from "../../Data Fetching/FetchData";
+import FetchData, { getAuthHeader } from "../../Data Fetching/FetchData";
 
 const AdminModifyCard = ({
   id,
