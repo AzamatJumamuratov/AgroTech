@@ -1,36 +1,38 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { FiMoreVertical, FiEdit2, FiTrash2, FiChevronLeft } from "react-icons/fi";
+import { FiMoreVertical, FiTrash2, FiChevronLeft } from "react-icons/fi";
 import ChatAvatar from "./ChatAvatar";
 import Selector from "../../../Components/Common/Selector";
 
-const ChatHeader = ({ chat, onEdit, onDelete }) => {
+const ChatHeader = ({ session, onDelete }) => {
   const navigate = useNavigate();
+
   const options = [
-    { value: "edit", label: "Edit Chat Name", icon: FiEdit2 },
     {
       value: "delete",
-      label: <span className="text-red-600 font-semibold">Delete Chat</span>,
+      label: <span className="text-red-600 font-semibold">Удалить чат</span>,
       icon: FiTrash2,
       iconClassName: "text-red-500",
     },
   ];
 
+  const title = session?.title || "AgroTech AI";
+
   return (
     <div className="h-16 border-b border-gray-100 flex items-center justify-between px-4 md:px-6 bg-white/80 backdrop-blur-sm z-20 shrink-0">
       <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
-        {/* Back Button for Mobile */}
-        <button 
+        {/* Кнопка "Назад" для мобилки */}
+        <button
           onClick={() => navigate("/chat")}
           className="md:hidden p-2 -ml-2 text-gray-400 hover:text-[#32694e] transition-colors"
         >
           <FiChevronLeft size={24} />
         </button>
-        
-        <ChatAvatar name={chat?.name} id={chat?.id} size="md" />
+
+        <ChatAvatar name={title} id={session?.id} size="md" />
         <div className="flex flex-col min-w-0">
           <h2 className="font-bold text-gray-800 leading-none truncate">
-            {chat?.name || "AgroTech Support"}
+            {title}
           </h2>
         </div>
       </div>
@@ -38,7 +40,6 @@ const ChatHeader = ({ chat, onEdit, onDelete }) => {
       <Selector
         options={options}
         onChange={(val) => {
-          if (val === "edit") onEdit?.();
           if (val === "delete") onDelete?.();
         }}
         trigger={

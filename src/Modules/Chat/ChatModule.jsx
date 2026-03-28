@@ -1,101 +1,227 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import ChatList from "./ChatList/ChatList";
 import ChatMain from "./ChatMain/ChatMain";
 import ChatEmpty from "./ChatMain/ChatEmpty";
+import {
+  fetchSessions,
+  fetchSession,
+  createSession,
+  sendMessage,
+  deleteSession,
+} from "../../Data Fetching/ChatData.js";
 
 const ChatModule = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState("");
 
-  const mockChats = [
-    {
-      id: "1",
-      name: "AgroTech Support",
-      lastMsg: "Отличный выбор!",
-      time: "10:02",
-      unread: 0,
-      avatar: "AT",
-    },
-    {
-      id: "2",
-      name: "Smart Greenhouse",
-      lastMsg: "Датчики влажности обновлены",
-      time: "Вчера",
-      unread: 2,
-      avatar: "SG",
-    },
-    {
-      id: "3",
-      name: "AgroSchool Admin",
-      lastMsg: "Когда начнется следующий курс?",
-      time: "Пн",
-      unread: 0,
-      avatar: "AS",
-    },
-  ];
+  // Основное состояние
+  const [sessions, setSessions] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const mockMessages = [
-    {
-      id: 1,
-      sender: "bot",
-      text: "Здравствуйте! Добро пожаловать в AgroTech. Чем я могу помочь вам сегодня?",
-      time: "10:00",
-    },
-    {
-      id: 2,
-      sender: "user",
-      text: "Привет! Хочу узнать больше о ваших проектах в области гидропоники.",
-      time: "10:01",
-    },
-    {
-      id: 3,
-      sender: "bot",
-      text: "Отличный выбор! Мы как раз запустили проект 'Smart Hydro' для автоматизации домашних теплиц. Вы можете найти его в разделе 'Проекты'.",
-      time: "10:02",
-    },
-  ];
-
-  const handleNewChat = (message) => {
-    if (message) {
-      console.log("Starting conversation with:", message);
-      // In a real app, you'd create a new chat record in the backend here
-      // and then navigate to its ID. For now, we'll just navigate to /chat
-      // and maybe simulate creation later.
+  // Проверка авторизации
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
     }
-    navigate("/chat");
-  };
+  }, [navigate]);
 
+  // Загрузка списка сессий
+  const loadSessions = useCallback(async () => {
+    try {
+      const data = await fetchSessions();
+      setSessions(data);
+    } catch (err) {
+      if (err.message === "unauthorized") {
+        navigate("/login");
+        return;
+      }
+      console.error("Ошибка загрузки сессий:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    loadSessions();
+  }, [loadSessions]);
+
+  // Загрузка сообщений при выборе сессии
+  useEffect(() => {
+    if (!id) {
+      setMessages([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadMessages = async () => {
+      setMessagesLoading(true);
+      try {
+        const session = await fetchSession(id);
+        if (!cancelled) {
+          setMessages(session.messages || []);
+        }
+      } catch (err) {
+        if (err.message === "unauthorized") {
+          navigate("/login");
+          return;
+        }
+        if (err.message === "not_found") {
+          navigate("/chat");
+          return;
+        }
+        console.error("Ошибка загрузки сообщений:", err);
+      } finally {
+        if (!cancelled) setMessagesLoading(false);
+      }
+    };
+
+    loadMessages();
+    return () => { cancelled = true; };
+  }, [id, navigate]);
+
+  // Создание нового чата с первым сообщением
+  const handleNewChat = useCallback(async (message) => {
+    if (!message?.trim()) {
+      navigate("/chat");
+      return;
+    }
+
+    setSending(true);
+    try {
+      const data = await createSession(message.trim());
+      const newSession = data.session;
+
+      // Добавляем новую сессию в список
+      setSessions((prev) => [newSession, ...prev]);
+
+      // Ставим сообщения из ответа
+      setMessages(newSession.messages || []);
+
+      // Переходим к новой сессии
+      navigate(`/chat/${newSession.id}`);
+    } catch (err) {
+      if (err.message === "unauthorized") {
+        navigate("/login");
+        return;
+      }
+      console.error("Ошибка создания чата:", err);
+    } finally {
+      setSending(false);
+    }
+  }, [navigate]);
+
+  // Отправка сообщения в существующую сессию
+  const handleSendMessage = useCallback(async (text) => {
+    if (!text?.trim() || !id || sending) return;
+
+    const userMsg = {
+      id: `temp-${Date.now()}`,
+      role: "user",
+      content: text.trim(),
+      created_at: new Date().toISOString(),
+    };
+
+    // Оптимистичный UI — сразу показываем сообщение юзера
+    setMessages((prev) => [...prev, userMsg]);
+    setSending(true);
+
+    try {
+      const response = await sendMessage(id, text.trim());
+
+      // Добавляем ответ AI
+      const aiMsg = {
+        id: `ai-${Date.now()}`,
+        role: "assistant",
+        content: response.text,
+        metadata: {
+          pdf_url: response.pdf_url,
+          sources: response.sources,
+          related_projects: response.related_projects,
+          contact_sent: response.contact_sent,
+        },
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+
+      // Обновляем список сессий (title мог измениться)
+      loadSessions();
+    } catch (err) {
+      if (err.message === "unauthorized") {
+        navigate("/login");
+        return;
+      }
+      // Показываем ошибку как сообщение от бота
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          role: "assistant",
+          content: "Произошла ошибка при отправке сообщения. Попробуйте ещё раз.",
+          created_at: new Date().toISOString(),
+        },
+      ]);
+      console.error("Ошибка отправки:", err);
+    } finally {
+      setSending(false);
+    }
+  }, [id, sending, navigate, loadSessions]);
+
+  // Удаление сессии
+  const handleDeleteChat = useCallback(async () => {
+    if (!id) return;
+
+    try {
+      await deleteSession(id);
+      setSessions((prev) => prev.filter((s) => String(s.id) !== String(id)));
+      navigate("/chat");
+    } catch (err) {
+      if (err.message === "unauthorized") {
+        navigate("/login");
+        return;
+      }
+      console.error("Ошибка удаления:", err);
+    }
+  }, [id, navigate]);
+
+  // Выбор чата
   const handleSelectChat = (chatId) => {
     navigate(`/chat/${chatId}`);
   };
 
-  const selectedChat = mockChats.find((c) => c.id === id);
+  // Текущая сессия для header
+  const currentSession = sessions.find((s) => String(s.id) === String(id));
 
   return (
     <main className="flex flex-1 overflow-hidden h-full w-full">
-      {/* Sidebar Area - Hidden on mobile when a chat is selected */}
+      {/* Sidebar — скрывается на мобилке когда выбран чат */}
       <div className={`w-full md:w-80 lg:w-96 shrink-0 h-full ${id ? "hidden md:flex" : "flex"}`}>
         <ChatList
-          chats={mockChats}
+          sessions={sessions}
           selectedChatId={id}
           onSelectChat={handleSelectChat}
-          onNewChat={handleNewChat}
+          onNewChat={() => navigate("/chat")}
+          loading={loading}
         />
       </div>
 
-      {/* Message Area - Full screen on mobile when a chat is selected, hidden otherwise */}
+      {/* Основная область */}
       <div className={`flex-1 overflow-hidden h-full bg-white ${id ? "flex" : "hidden md:flex"}`}>
         {id ? (
           <ChatMain
-            chat={selectedChat}
-            messages={mockMessages}
-            inputValue={inputValue}
-            onInputChange={setInputValue}
+            session={currentSession}
+            messages={messages}
+            onSend={handleSendMessage}
+            onDelete={handleDeleteChat}
+            sending={sending}
+            loading={messagesLoading}
           />
         ) : (
-          <ChatEmpty onNewChat={handleNewChat} />
+          <ChatEmpty onNewChat={handleNewChat} sending={sending} />
         )}
       </div>
     </main>

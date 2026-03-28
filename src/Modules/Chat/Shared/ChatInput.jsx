@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { FiSend } from "react-icons/fi";
 
-const ChatInput = ({ value, onChange, onSend }) => {
+const ChatInput = ({ value, onChange, onSend, disabled }) => {
   const textareaRef = useRef(null);
 
   // Auto-resize logic (optional, but requested multiline)
@@ -16,7 +16,7 @@ const ChatInput = ({ value, onChange, onSend }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (value.trim()) {
+      if (value.trim() && !disabled) {
         onSend();
       }
     }
@@ -38,7 +38,7 @@ const ChatInput = ({ value, onChange, onSend }) => {
       </div>
       <button
         onClick={onSend}
-        disabled={!value.trim()}
+        disabled={!value.trim() || disabled}
         className={`p-3 rounded-2xl transition-all shadow-md transform hover:scale-105 active:scale-95 flex items-center justify-center mb-1 ${
           value.trim()
             ? "bg-[#32694e] text-white shadow-[#32694e]/20"

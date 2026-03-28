@@ -3,12 +3,12 @@ import { FiMessageSquare } from "react-icons/fi";
 import ChatBackground from "../Shared/ChatBackground";
 import ChatInput from "../Shared/ChatInput";
 
-const ChatEmpty = ({ onNewChat }) => {
+const ChatEmpty = ({ onNewChat, sending }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSend = () => {
-    if (!inputValue.trim()) return;
-    onNewChat?.(inputValue);
+    if (!inputValue.trim() || sending) return;
+    onNewChat?.(inputValue.trim());
     setInputValue("");
   };
 
@@ -28,12 +28,13 @@ const ChatEmpty = ({ onNewChat }) => {
         </div>
       </ChatBackground>
 
-      {/* Centered Input Area */}
+      {/* Инпут внизу по центру */}
       <div className="px-6 pb-8 pt-4 w-full max-w-3xl mx-auto absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
         <ChatInput
           value={inputValue}
           onChange={setInputValue}
           onSend={handleSend}
+          disabled={sending}
         />
       </div>
     </div>
