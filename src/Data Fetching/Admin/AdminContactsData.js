@@ -8,7 +8,7 @@ export async function loader() {
   }
   let response = await FetchData("admin/project-contacts/", {
     headers: {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
     },
   });
   if (response.ok) {

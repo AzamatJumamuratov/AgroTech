@@ -85,7 +85,7 @@ const AdminModifyCard = ({
     const response = await FetchData(`${modifyPath}/${id}/`, {
       method: "DELETE",
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: getAuthHeader(),
       },
     });
 
@@ -131,7 +131,7 @@ const AdminModifyCard = ({
     }
 
     const headers = {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
     };
 
     let bodyData;

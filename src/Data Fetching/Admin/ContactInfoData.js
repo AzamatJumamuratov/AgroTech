@@ -8,12 +8,12 @@ export async function loader() {
   }
   let responseContacts = await FetchData("contact-info/", {
     headers: {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
     },
   });
   let responseSocialLinks = await FetchData("social-links/", {
     headers: {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
     },
   });
   if (responseContacts.ok && responseSocialLinks.ok) {

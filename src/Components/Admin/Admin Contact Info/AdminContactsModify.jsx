@@ -3,7 +3,7 @@ import bin_icon from "../../../assets/trash_bin.svg";
 import { redirect, useRevalidator } from "react-router";
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import FetchData from "../../../Data Fetching/FetchData";
+import FetchData, { getAuthHeader } from "../../../Data Fetching/FetchData";
 import AdminContactsModal from "./AdminConactsModal";
 import LanguageSwitcher from "../LanguageSwitcher";
 
@@ -80,7 +80,7 @@ const AdminContactsModify = ({
     let response = await FetchData(`${modifyPath}/${id}/`, {
       method: "DELETE",
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: getAuthHeader(),
       },
     });
     if (response.ok) {
@@ -107,7 +107,7 @@ const AdminContactsModify = ({
       return redirect("/login");
     }
     const headers = {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
       "Content-Type": "application/json",
     };
 

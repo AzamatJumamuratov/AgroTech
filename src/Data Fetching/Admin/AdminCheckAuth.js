@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import FetchData from "../FetchData";
+import FetchData, { getAuthHeader } from "../FetchData";
 
 export async function loader() {
   const token = localStorage.getItem("token");
@@ -8,7 +8,7 @@ export async function loader() {
   }
   let response = await FetchData("admin/project-comments/", {
     headers: {
-      Authorization: `Token ${token}`,
+      Authorization: getAuthHeader(),
     },
   });
 
