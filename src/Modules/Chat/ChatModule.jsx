@@ -9,6 +9,7 @@ import {
   createSession,
   sendMessage,
   deleteSession,
+  updateSession,
 } from "../../Data Fetching/ChatData.js";
 
 const ChatModule = () => {
@@ -188,6 +189,27 @@ const ChatModule = () => {
     }
   }, [id, navigate]);
 
+  // Переименование сессии
+  const handleRenameChat = useCallback(async (newTitle) => {
+    if (!id || !newTitle) return;
+
+    try {
+      await updateSession(id, { title: newTitle });
+      // Обновляем title в списке сессий
+      setSessions((prev) =>
+        prev.map((s) =>
+          String(s.id) === String(id) ? { ...s, title: newTitle } : s
+        )
+      );
+    } catch (err) {
+      if (err.message === "unauthorized") {
+        navigate("/login");
+        return;
+      }
+      console.error("Ошибка переименования:", err);
+    }
+  }, [id, navigate]);
+
   // Выбор чата
   const handleSelectChat = (chatId) => {
     navigate(`/chat/${chatId}`);
@@ -217,6 +239,7 @@ const ChatModule = () => {
             messages={messages}
             onSend={handleSendMessage}
             onDelete={handleDeleteChat}
+            onRename={handleRenameChat}
             sending={sending}
             loading={messagesLoading}
           />

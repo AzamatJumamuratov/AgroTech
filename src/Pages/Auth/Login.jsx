@@ -1,4 +1,4 @@
-import { Form, useActionData } from "react-router";
+import { Form, useActionData, Link } from "react-router";
 import ErrorMessage from "../../Components/Auth/ErrorMessage";
 import AuthTitle from "../../Components/Auth/AuthTitle";
 import { useEffect, useRef } from "react";
@@ -53,13 +53,19 @@ const Login = () => {
             />
           </div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-3">
           <button
             ref={submitBtnRef}
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-[#355e4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2f8059] disabled:opacity-50"
           >
             Войти
           </button>
+          <Link
+            to="/"
+            className="w-full flex justify-center py-2 px-4 border-2 border-gray-300 text-sm font-medium rounded-md text-gray-600 bg-white hover:bg-gray-50 transition-colors"
+          >
+            Продолжить как гость
+          </Link>
         </div>
       </Form>
     </>

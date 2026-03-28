@@ -58,6 +58,21 @@ export async function sendMessage(sessionId, message) {
   throw new Error(`Ошибка отправки сообщения: ${response.status}`);
 }
 
+// PATCH /api/ai/chat/sessions/{id}/ — обновить сессию (заголовок)
+export async function updateSession(id, data) {
+  const response = await FetchData(`ai/chat/sessions/${id}/`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(data),
+  });
+  if (response.ok) return await response.json();
+  if (response.status === 401) throw new Error("unauthorized");
+  throw new Error(`Ошибка обновления сессии: ${response.status}`);
+}
+
 // DELETE /api/ai/chat/sessions/{id}/ — удалить сессию
 export async function deleteSession(id) {
   const response = await FetchData(`ai/chat/sessions/${id}/`, {

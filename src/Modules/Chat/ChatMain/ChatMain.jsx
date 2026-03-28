@@ -4,7 +4,7 @@ import ChatMessage from "../Shared/ChatMessage";
 import ChatHeader from "../Shared/ChatHeader";
 import ChatInput from "../Shared/ChatInput";
 
-const ChatMain = ({ session, messages, onSend, onDelete, sending, loading }) => {
+const ChatMain = ({ session, messages, onSend, onDelete, onRename, sending, loading }) => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef(null);
 
@@ -24,6 +24,7 @@ const ChatMain = ({ session, messages, onSend, onDelete, sending, loading }) => 
       <ChatHeader
         session={session}
         onDelete={onDelete}
+        onRename={onRename}
       />
 
       {/* Область сообщений */}
