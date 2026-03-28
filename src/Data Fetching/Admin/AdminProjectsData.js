@@ -29,6 +29,7 @@ export async function loader() {
   //     },
   //   ],
   // };
+  return { results: [] };
 }
 
 export async function action({ request }) {

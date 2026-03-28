@@ -15,4 +15,5 @@ export async function Loader() {
     console.error("Error fetching Footer data");
   }
 
+  return { contacts: {}, social_links: {} };
 }

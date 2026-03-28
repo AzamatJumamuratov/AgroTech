@@ -59,4 +59,5 @@ export async function action({ request }) {
     success: response.ok,
     result,
   };
+  return { results: [] };
 }

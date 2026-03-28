@@ -33,4 +33,5 @@ export async function loader() {
   //     },
   //   ],
   // };
+  return { results: [] };
 }

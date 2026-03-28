@@ -24,4 +24,5 @@ export async function loader() {
         response.statusText
     );
   }
+  return { results: [] };
 }
