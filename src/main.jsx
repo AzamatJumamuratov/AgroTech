@@ -84,6 +84,14 @@ import AdminContactInfo from "./Pages/Admin/Admin Contact Info/AdminContactInfo.
 
 import { loader as ContactInfoLoader } from "./Data Fetching/Admin/ContactInfoData.js";
 
+import AdminAIContextLayout from "./Pages/Admin/Admin AI Context/AdminAIContextLayout.jsx";
+import AdminAIContext from "./Pages/Admin/Admin AI Context/AdminAIContext.jsx";
+import AdminAIContextForm from "./Pages/Admin/Admin AI Context/AdminAIContextForm.jsx";
+import {
+  loader as AdminAIContextLoader,
+  action as AdminAIContextAction,
+} from "./Data Fetching/Admin/AdminAIContextData.js";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -273,6 +281,22 @@ const router = createBrowserRouter([
             index: true,
             Component: AdminContactInfo,
             loader: ContactInfoLoader,
+          },
+        ],
+      },
+      {
+        path: "ai-context",
+        Component: AdminAIContextLayout,
+        children: [
+          {
+            index: true,
+            Component: AdminAIContext,
+            loader: AdminAIContextLoader,
+          },
+          {
+            path: "new",
+            Component: AdminAIContextForm,
+            action: AdminAIContextAction,
           },
         ],
       },
