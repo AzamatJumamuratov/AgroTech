@@ -12,6 +12,7 @@ const HeaderTop = () => {
   const [sidebarOpened, OpenSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -35,12 +36,29 @@ const HeaderTop = () => {
           <CustomSideBar opened={sidebarOpened} OpenSidebarFn={OpenSidebar} />
           <SearchBar additionalClass={"hidden md:flex"} />
           <LanguageButtons additionalClass={"hidden md:flex"} />
-          <button
-            onClick={() => setShowModal(true)}
-            className="md:block hidden bg-white/30 py-1 px-2.5 active:scale-110 duration-100 ease-in-out rounded-lg  text-white"
-          >
-            <img src={sign_out_icon} className="lg:w-5 lg:h-5  size-4" />
-          </button>
+          {isLoggedIn ? (
+            <button
+              onClick={() => setShowModal(true)}
+              className="md:block hidden bg-white/30 py-1 px-2.5 active:scale-110 duration-100 ease-in-out rounded-lg text-white"
+            >
+              <img src={sign_out_icon} className="lg:w-5 lg:h-5 size-4" />
+            </button>
+          ) : (
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-white/30 py-1.5 px-3 active:scale-110 duration-100 ease-in-out rounded-lg text-white text-sm font-medium"
+              >
+                Вход
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="bg-white py-1.5 px-3 active:scale-110 duration-100 ease-in-out rounded-lg text-[#32694e] text-sm font-medium"
+              >
+                Регистрация
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
