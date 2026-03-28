@@ -1,4 +1,5 @@
 import React from "react";
+import Markdown from "react-markdown";
 import ChatAvatar from "./ChatAvatar";
 
 // Форматирование времени сообщения
@@ -29,8 +30,14 @@ const ChatMessage = ({ msg }) => {
               : "bg-white text-gray-800 rounded-tl-none border border-gray-100 hover:border-gray-200"
           }`}
         >
-          {/* Текст сообщения с поддержкой переносов */}
-          <p className="text-sm md:text-base leading-relaxed tracking-wide whitespace-pre-wrap">{text}</p>
+          {/* Текст сообщения — Markdown для бота, plain text для юзера */}
+          {isUser ? (
+            <p className="text-sm md:text-base leading-relaxed tracking-wide whitespace-pre-wrap">{text}</p>
+          ) : (
+            <div className="text-sm md:text-base leading-relaxed tracking-wide prose prose-sm max-w-none prose-p:my-1 prose-li:my-0.5 prose-ol:my-1 prose-ul:my-1 prose-strong:text-gray-900">
+              <Markdown>{text}</Markdown>
+            </div>
+          )}
 
           {/* Время */}
           <div className={`mt-1 flex items-center gap-1 ${isUser ? "justify-end" : "justify-start"}`}>
