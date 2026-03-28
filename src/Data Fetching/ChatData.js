@@ -3,7 +3,8 @@ import FetchData from "./FetchData.js";
 // Получить заголовок авторизации из localStorage
 function getAuthHeaders() {
   const token = localStorage.getItem("token");
-  return token ? { Authorization: `Token ${token}` } : {};
+  const tokenType = localStorage.getItem("token_type") || "Token";
+  return token ? { Authorization: `${tokenType} ${token}` } : {};
 }
 
 // GET /api/ai/chat/sessions/ — список сессий

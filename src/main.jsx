@@ -154,6 +154,11 @@ const router = createBrowserRouter([
         action: LoginAction,
       },
       {
+        path: "register",
+        Component: Register,
+        action: RegisterAction,
+      },
+      {
         path: "admin/register",
         Component: Register,
         action: RegisterAction,

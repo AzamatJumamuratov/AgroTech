@@ -4,7 +4,7 @@ import FetchData from "../FetchData";
 
 export async function RegisterAction({ request, params }) {
   const formData = await request.formData();
-  let response = await FetchData("admin/register/", {
+  let response = await FetchData("accounts/register/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,10 +12,15 @@ export async function RegisterAction({ request, params }) {
     body: ConvertToJSonFormData(formData),
   });
   if (response.ok) {
-    return redirect("/login");
+    let result = await response.json();
+    // Автоматически логиним после регистрации
+    localStorage.setItem("token", result.tokens.access);
+    localStorage.setItem("refresh_token", result.tokens.refresh);
+    localStorage.setItem("token_type", "Bearer");
+    return redirect("/chat");
   } else {
     console.error(
-      "Error Registering Admin. Code : " +
+      "Error Registering. Code : " +
         response.status +
         " Text : " +
         response.statusText

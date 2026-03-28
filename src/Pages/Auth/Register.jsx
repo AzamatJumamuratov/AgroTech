@@ -17,7 +17,7 @@ const Register = () => {
     <>
       <AuthTitle
         linkTo={"/login"}
-        title={"Регистрация Админа"}
+        title={"Регистрация"}
         linkText={"Уже есть аккаунт? Войти"}
       />
       {actionData && actionData.non_field_errors && (
