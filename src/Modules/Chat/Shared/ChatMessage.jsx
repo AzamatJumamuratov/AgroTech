@@ -22,9 +22,9 @@ const ChatMessage = ({ msg }) => {
         id={isUser ? "user" : 1}
         size="sm"
       />
-      <div className={`max-w-[75%] group relative flex flex-col ${isUser ? "items-end" : "items-start"}`}>
+      <div className={`max-w-[75%] min-w-0 group relative flex flex-col ${isUser ? "items-end" : "items-start"}`}>
         <div
-          className={`rounded-2xl px-5 py-3 shadow-sm transition-all duration-300 ${
+          className={`rounded-2xl px-5 py-3 shadow-sm transition-all duration-300 overflow-hidden ${
             isUser
               ? "bg-[#32694e] text-white rounded-tr-none hover:bg-[#2a5942]"
               : "bg-white text-gray-800 rounded-tl-none border border-gray-100 hover:border-gray-200"
@@ -32,9 +32,9 @@ const ChatMessage = ({ msg }) => {
         >
           {/* Текст сообщения — Markdown для бота, plain text для юзера */}
           {isUser ? (
-            <p className="text-sm md:text-base leading-relaxed tracking-wide whitespace-pre-wrap">{text}</p>
+            <p className="text-sm md:text-base leading-relaxed tracking-wide whitespace-pre-wrap break-words">{text}</p>
           ) : (
-            <div className="text-sm md:text-base leading-relaxed tracking-wide prose prose-sm max-w-none prose-p:my-1 prose-li:my-0.5 prose-ol:my-1 prose-ul:my-1 prose-strong:text-gray-900">
+            <div className="text-sm md:text-base leading-relaxed tracking-wide prose prose-sm max-w-none prose-p:my-1 prose-li:my-0.5 prose-ol:my-1 prose-ul:my-1 prose-strong:text-gray-900 prose-pre:overflow-x-auto prose-pre:max-w-full prose-code:break-words">
               <Markdown>{text}</Markdown>
             </div>
           )}
