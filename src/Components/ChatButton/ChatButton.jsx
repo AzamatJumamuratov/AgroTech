@@ -5,7 +5,7 @@ const ChatButton = () => {
   return (
     <Link
       to="/chat"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border-almostWhite border-1 bg-[#32694e] text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-[#257947] focus:outline-none active:scale-95"
+      className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-primary/30 transition-all duration-300 hover:scale-110 hover:bg-primary-light hover:shadow-primary/50 focus:outline-none active:scale-95 animate-pulse-soft"
       aria-label="Open Chat"
     >
       <svg

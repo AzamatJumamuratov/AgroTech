@@ -42,14 +42,16 @@ const Footer = () => {
     max-[540px]:grid-cols-1`;
 
   return (
-    <footer className="bg-linear-to-r from-bg-start to-bg-end lg:mt-24 md:mt-10 mt-4">
+    <footer className="bg-primary-dark lg:mt-24 md:mt-10 mt-4">
       <div className="wrapper">
         <div className={gridClass}>
           {hasSocialLinks && <FooterSocialMedia />}
           {hasContacts && <Contacts />}
           <QuickLinks isFullWidth={visibleCount === 1} />
         </div>
-
+        <div className="border-t border-white/10 py-4 text-center">
+          <p className="text-white/40 text-xs">AgroStar (AgroTech) &copy; {new Date().getFullYear()}</p>
+        </div>
       </div>
     </footer>
   );

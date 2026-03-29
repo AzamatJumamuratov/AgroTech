@@ -6,7 +6,7 @@ import sign_out_icon from "../../../assets/sign_out.svg";
 import { useState } from "react";
 import CustomSideBar from "./Sidebar/CustomSideBar";
 import { useNavigate } from "react-router";
-import ConfirmLogoutModal from "../../Common/ConfirmLogoutModal"; // путь зависит от структуры
+import ConfirmLogoutModal from "../../Common/ConfirmLogoutModal";
 
 const HeaderTop = () => {
   const [sidebarOpened, OpenSidebar] = useState(false);
@@ -16,16 +16,15 @@ const HeaderTop = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("token_type");
     navigate("/login");
   };
 
   return (
-    <div
-      className="bg-linear-to-r from-bg-start to-bg-end 
-    shadow-[0_2px_10px_0_rgba(0,0,0,0.1)]"
-    >
+    <div className="bg-primary-dark">
       <div className="wrapper">
-        <div className="flex items-center  lg:gap-8 gap-3 justify-between xl:py-4 lg:py-3  md:py-2 py-4">
+        <div className="flex items-center lg:gap-8 gap-3 justify-between xl:py-4 lg:py-3 md:py-2 py-4">
           <LogoComponent />
           <button
             onClick={() => OpenSidebar(!sidebarOpened)}
@@ -39,21 +38,21 @@ const HeaderTop = () => {
           {isLoggedIn ? (
             <button
               onClick={() => setShowModal(true)}
-              className="md:block hidden bg-white/30 py-1 px-2.5 active:scale-110 duration-100 ease-in-out rounded-lg text-white"
+              className="md:block hidden bg-white/10 hover:bg-white/20 py-2 px-3 rounded-full text-white transition-colors"
             >
               <img src={sign_out_icon} className="lg:w-5 lg:h-5 size-4" />
             </button>
           ) : (
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-3">
               <button
                 onClick={() => navigate("/login")}
-                className="bg-white/30 py-1.5 px-3 active:scale-110 duration-100 ease-in-out rounded-lg text-white text-sm font-medium"
+                className="py-2 px-4 rounded-full text-white/90 hover:text-white text-sm font-medium border border-white/20 hover:border-white/40 transition-all"
               >
                 Вход
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="bg-white py-1.5 px-3 active:scale-110 duration-100 ease-in-out rounded-lg text-[#32694e] text-sm font-medium"
+                className="py-2 px-4 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-semibold transition-colors shadow-lg shadow-accent/20"
               >
                 Регистрация
               </button>

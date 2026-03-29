@@ -5,27 +5,32 @@ import { useTranslation } from "react-i18next";
 const HeroBanner = () => {
   const { t } = useTranslation();
   return (
-    <section className="relative xl:h-[720px] lg:h-[512px] sm:h-[384px] min-[350px]:h-340px h-[420px]">
-      <div className="absolute -z-10 w-full h-full bg-linear-to-r from-bg-start to-bg-end">
+    <section className="relative min-h-[70vh] flex items-center">
+      {/* Фон с gradient overlay */}
+      <div className="absolute inset-0 -z-10">
         <img
           src={bg}
           alt="bg-main"
-          className="absolute inset-0 w-full h-full object-cover -z-10 opacity-[64%]"
+          className="absolute inset-0 w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 via-primary-dark/70 to-primary/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-transparent to-transparent" />
       </div>
-      <div className="wrapper">
-        <div className="text-white   xl:max-w-[608px] lg:max-w-[512px] md:max-w-[512px] max-sm:w-full xl:pt-32 lg:pt-20 pt-10">
-          <h1 className="2xl:text-[56px] xl:text-5xl lg:text-4xl text-3xl mb-6 font-bold">
+
+      <div className="wrapper py-20">
+        <div className="text-white xl:max-w-[640px] lg:max-w-[540px] md:max-w-[520px] max-sm:w-full animate-fadeInUp">
+          <h1 className="2xl:text-6xl xl:text-5xl lg:text-4xl text-3xl mb-6 font-bold leading-tight drop-shadow-lg">
             {t("banner_title")}
           </h1>
-          <p className="mb-9 xl:mr-32 lg:mr-[84px] 2xl:text-2xl xl:text-xl lg:text-lg text-base mr-10">
+          <p className="mb-10 2xl:text-xl xl:text-lg lg:text-base text-base leading-relaxed text-white/90 max-w-lg">
             {t("banner_desc")}
           </p>
           <Link
             to={"/contacts"}
-            className="bg-[#F39C12] xl:px-6 lg:px-4 px-3 py-3 rounded-full xl:text-lg lg:text-xs text-[10px]"
+            className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover xl:px-8 lg:px-6 px-5 py-3.5 rounded-full xl:text-lg lg:text-sm text-sm font-semibold text-white shadow-xl shadow-accent/30 hover:shadow-accent/50 transition-all hover:-translate-y-0.5"
           >
             {t("banner_btn")}
+            <span className="text-xl">→</span>
           </Link>
         </div>
       </div>
