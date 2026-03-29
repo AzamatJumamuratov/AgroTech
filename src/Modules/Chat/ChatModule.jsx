@@ -86,13 +86,24 @@ const ChatModule = () => {
   }, [id, navigate]);
 
   // Создание нового чата с первым сообщением
+  // pendingMessage — временное сообщение юзера пока создаётся сессия
+  const [pendingMessage, setPendingMessage] = useState(null);
+
   const handleNewChat = useCallback(async (message) => {
     if (!message?.trim()) {
       navigate("/chat");
       return;
     }
 
+    // Показываем сообщение юзера + typing indicator сразу
+    setPendingMessage({
+      id: `pending-${Date.now()}`,
+      role: "user",
+      content: message.trim(),
+      created_at: new Date().toISOString(),
+    });
     setSending(true);
+
     try {
       const data = await createSession(message.trim());
       const newSession = data.session;
@@ -103,9 +114,11 @@ const ChatModule = () => {
       // Ставим сообщения из ответа
       setMessages(newSession.messages || []);
 
-      // Переходим к новой сессии
+      // Убираем pending и переходим к сессии
+      setPendingMessage(null);
       navigate(`/chat/${newSession.id}`);
     } catch (err) {
+      setPendingMessage(null);
       if (err.message === "unauthorized") {
         navigate("/login");
         return;
@@ -244,7 +257,7 @@ const ChatModule = () => {
             loading={messagesLoading}
           />
         ) : (
-          <ChatEmpty onNewChat={handleNewChat} sending={sending} />
+          <ChatEmpty onNewChat={handleNewChat} sending={sending} pendingMessage={pendingMessage} />
         )}
       </div>
     </main>
