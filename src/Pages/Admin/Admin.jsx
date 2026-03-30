@@ -12,7 +12,7 @@ const Admin = () => {
     };
   }, []);
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <div className="h-screen flex">
         <SidebarContext.Provider value={[openSideBar, setOpenSideBar]}>
           <div className="xl:w-[320px] md:w-[280px] w-[180px] max-[500px]:w-0">
