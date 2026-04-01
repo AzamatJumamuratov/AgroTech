@@ -17,7 +17,7 @@ export async function RegisterAction({ request, params }) {
     localStorage.setItem("token", result.tokens.access);
     localStorage.setItem("refresh_token", result.tokens.refresh);
     localStorage.setItem("token_type", "Bearer");
-    return redirect("/chat");
+    return redirect("/");
   } else {
     console.error(
       "Error Registering. Code : " +

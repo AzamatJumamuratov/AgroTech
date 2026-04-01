@@ -25,7 +25,7 @@ export async function LoginAction({ request, params }) {
     if (result.user?.is_staff) {
       return redirect("/admin");
     }
-    return redirect("/chat");
+    return redirect("/");
   } else {
     // Fallback: пробуем admin/login/ (DRF Token — для админов)
     let adminResponse = await FetchData("admin/login/", {
